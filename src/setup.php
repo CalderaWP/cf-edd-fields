@@ -49,9 +49,44 @@ class setup {
 			"author_url"		=>	"https://CalderaWP.com",
 			"template"			=>	__DIR__ . '/config-licensed-downloads.php',
 		];
-		$fields = [];
-		new processor( $config, $fields, self::$slug );
 
+		new processor( $config, self::processor_fields(), self::$slug );
+
+	}
+
+	public static function processor_fields(){
+		return [
+			[
+				'id' => 'edd_licensed_downloads',
+				'label' => __( 'Field', 'cf-edd' ),
+				'type' => 'advanced',
+				'desc' => __( 'Choose a select field to populate with licensed downloads for user specified in next option.', 'cf-edd' ),
+				'allow_types' => [
+					'dropdown', 'select2', 'radio', 'checkbox'
+				],
+				'exclude' => [
+					'system', 'variables'
+				]
+
+			],
+			[
+				'id' => 'edd_licensed_downloads_user',
+				'label' => __( 'User ID', 'cf-edd' ),
+				'desc' => __( 'User ID to get licensed downloads for. Leave empty for current user ID. ', 'cf-edd' ),
+				'type' => 'text',
+				'required' => false,
+				'magic' => 'true',
+
+			],
+			[
+				'id' => 'edd_licensed_downloads_none',
+				';abel' => __( 'Empty Message', 'cf-edd' ),
+				'type' => 'text',
+				'required' => false,
+				'magic' => 'true',
+				'desc' => __( 'No licensed Downloads Found Message', 'cf-form-connector' ),
+			]
+		];
 	}
 
 	/**
