@@ -14,12 +14,6 @@ namespace calderawp\cfeddfields\fields\populate;
 class  query {
 
 	/**
-	 * @var array
-	 */
-	protected $prices;
-
-
-	/**
 	 * Add Hooks
 	 *
 	 * @since 0.0.2
@@ -73,31 +67,14 @@ class  query {
 
 	}
 
-	protected function add_price( $field_id, $download_id, $form_id ){
-		$download = new \EDD_Download( $download_id );
-		if( $download->has_variable_prices() ){
-			$price_id = edd_get_default_variable_price( $download_id);
-			$prices = $download->get_prices();
-			if( isset( $prices[ $price_id ] ) ){
-				$price = $prices[ $price_id ][ 'amount' ];
-			}else{
-				$price = $prices[ key($prices ) ][ 'amount' ];
-			}
-		}else{
-			$price = $download->get_price();
-		}
-
-		if( ! isset( $this->prices[ $form_id ] ) ){
-			$this->prices[ $form_id ] = [];
-		}
-
-		if( ! isset( $this->prices[ $form_id ][ $field_id ] ) ){
-			$this->prices[ $form_id ][ $field_id ] = [];
-		}
-
-		$this->prices[ $form_id ][ $field_id ][ $download_id ] = $price;
-
-	}
+	/**
+	 * Track a price
+	 *
+	 * @param string $field_id
+	 * @param string|int $download_id
+	 * @param string $form_id
+	 */
+	protected function add_price( $field_id, $download_id, $form_id ){}
 
 	/**
 	 * Query for download posts
