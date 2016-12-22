@@ -11,6 +11,8 @@
 namespace calderawp\cfeddfields;
 
 
+use calderawp\cfeddfields\fields\license;
+
 class setup {
 
 	/**
@@ -80,7 +82,7 @@ class setup {
 			],
 			[
 				'id' => 'edd_licensed_downloads_none',
-				';abel' => __( 'Empty Message', 'cf-edd' ),
+				'label' => __( 'Empty Message', 'cf-edd' ),
 				'type' => 'text',
 				'required' => false,
 				'magic' => 'true',

@@ -1,12 +1,15 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: josh
- * Date: 12/21/16
- * Time: 6:30 PM
+ * EDD SL License Field
+ *
+ * @package CF_EDD_Fields
+ * @author    Josh Pollock <Josh@CalderaWP.com>
+ * @license   GPL-2.0+
+ * @link
+ * @copyright 2016 CalderaWP LLC
  */
 
-namespace calderawp\cfeddfields;
+namespace calderawp\cfeddfields\fields;
 
 
 class license {
@@ -54,43 +57,6 @@ class license {
 
 	}
 
-
-	/**
-	 * If needed sets up dropdown options for EDD field.
-	 *
-	 * @since 0.1.0
-	 *
-	 * @param array $form Form config
-	 *
-	 * @return array
-	 */
-	public static function maybe_setup_licensed_field( $field, $form ) {
-		// does this form have the processor?
-		if( $processors = \Caldera_Forms::get_processor_by_type( 'edd-licensed-downloads', $form ) ){
-			foreach( $processors as $processor ){
-				if( $field['ID'] === $processor['config']['edd_licensed_downloads'] ){
-					// ye this a bound EDD field
-					// over engineerd using that CF_EDD_License_Field class can do it here since we now have the whole config of an active processor.
-					$user_id = null;
-					if ( ! empty( $config[ 'config' ][ 'edd_licensed_downloads_user' ] ) && 0 < absint( $config[ 'config' ][ 'edd_licensed_downloads_user' ] ) ) {
-						$user_id = $config[ 'config' ][ 'edd_licensed_downloads_user' ];
-					}
-					$downloads = self::get_downloads_by_licensed_user( $user_id );
-					$field[ 'config' ][ 'option' ] = array();
-					if ( ! empty( $downloads ) ) {
-						foreach( $downloads as $id => $title ) {
-							$field[ 'config' ][ 'option' ][ ] = array(
-								'label' => esc_html( $title ),
-								'value' => (int) $id,
-							);
-						}
-					}
-
-				}
-			}
-		}
-		return $field;
-	}
 
 
 }
