@@ -1,37 +1,69 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: josh
- * Date: 12/21/16
- * Time: 6:28 PM
+ * Make everything go
+ *
+ * @package CF_EDD
+ * @author    Josh Pollock <Josh@CalderaWP.com>
+ * @license   GPL-2.0+
+ * @link
+ * @copyright 2016 CalderaWP LLC
  */
-
 namespace calderawp\cfeddfields;
 
 
 class setup {
 
-	protected static $slug;
+	/**
+	 * @var string
+	 */
+	protected static $slug = 'edd-licensed-downloads';
 
-
+	/**
+	 * Add hooks
+	 */
 	public static function add_hooks(){
-		add_filter('caldera_forms_pre_load_processors', [ __CLASS__, 'add_processor' ] );
+		add_action( 'caldera_forms_pre_load_processors', [ __CLASS__, 'add_processor' ] );
 		add_filter( 'caldera_forms_render_get_field', [ __CLASS__, 'init_license_field' ], 10, 2 );
 	}
+
+	/**
+	 * Remove hooks
+	 */
+	public static function remove_hooks(){
+		remove_action( 'caldera_forms_pre_load_processors', [ __CLASS__, 'add_processor' ] );
+		remove_filter( 'caldera_forms_render_get_field', [ __CLASS__, 'init_license_field' ], 10 );
+	}
+
+	/**
+	 * Load the EDD SL processor
+	 *
+	 * @uses "caldera_forms_pre_load_processors" action
+	 */
 	public static function add_processor(){
 
 		$config = [
-			"name"				=>	__('EDD: Licensed Downloads', 'cf-edd'),
-			"description"		=>	__( 'Populate a select field with a user\'s licensed downloads..', 'cf-edd'),
-			"icon"				=>	CF_EDD_URL . "icon.png",
+			"name"				=>	__( 'EDD: Licensed Downloads', 'cf-edd'),
+			"description"		=>	__( 'Populate a select field with a user\'s licensed downloads.', 'cf-edd'),
+			"icon"				=>	plugin_dir_url( __FILE__ )  . '/icon.png',
 			"author"			=>	"Josh Pollock for CalderaWP LLC",
 			"author_url"		=>	"https://CalderaWP.com",
-			"template"			=>	CF_EDD_PATH . "includes/config-licensed-downloads.php",
+			"template"			=>	__DIR__ . '/config-licensed-downloads.php',
 		];
 		$fields = [];
 		new processor( $config, $fields, self::$slug );
+
 	}
 
+	/**
+	 * Setup license field for EDD SL processor
+	 *
+	 * @uses "caldera_forms_render_get_field" filter
+	 *
+	 * @param array $field
+	 * @param array $form
+	 *
+	 * @return array
+	 */
 	public static function init_license_field( $field, $form ){
 
 		if( $processors = \Caldera_Forms::get_processor_by_type( 'edd-licensed-downloads', $form ) ){
