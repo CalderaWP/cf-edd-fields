@@ -26,7 +26,7 @@ class processor extends \Caldera_Forms_Processor_Processor {
 		if ( 0 < absint( $_user ) ) {
 			$user = $_user;
 		}else{
-			$user = null;
+			$user = get_current_user_id();
 		}
 
 		$downloads = license::get_downloads_by_licensed_user( $user );
