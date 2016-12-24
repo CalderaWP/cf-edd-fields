@@ -117,12 +117,15 @@ class setup {
 					$field[ 'config' ][ 'option' ] = array();
 					if ( ! empty( $downloads ) ) {
 						foreach( $downloads as $id => $title ) {
-							$field[ 'config' ][ 'option' ][ ] = array(
+							$field[ 'config' ][ 'option' ][ $id ] = array(
 								'label' => esc_html( $title ),
-								'value' => (int) $id,
+								'value' => (string) $id,
 							);
 						}
 					}
+
+					//Worksround for https://github.com/CalderaWP/Caldera-Forms/issues/1074
+                    $field[ 'config' ]['show_values'] = 1;
 
 
 				}
@@ -130,7 +133,6 @@ class setup {
 			}
 
 		}
-
 		return $field;
 
 	}

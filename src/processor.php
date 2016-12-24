@@ -34,7 +34,7 @@ class processor extends \Caldera_Forms_Processor_Processor {
 		if ( ! in_array( $value, array_keys( $downloads ) ) ) {
 			return array(
 				'type'=>'error',
-				'note' => __( "Selected User Does Note Have A License For This Download.", 'cf-edd' )
+				'note' => var_export( [ 'd' => $downloads, 'v' => $value ] , true )
 			);
 		}
 	}
