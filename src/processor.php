@@ -21,22 +21,28 @@ class processor extends \Caldera_Forms_Processor_Processor {
 	 * @inheritdoc
 	 */
 	public function pre_processor( array $config, array $form, $proccesid ) {
-		$value = \Caldera_Forms::get_field_data( $config[ 'edd_licensed_downloads' ], $form );
-		$_user = \Caldera_Forms::do_magic_tags( $config[  'edd_licensed_downloads_user'] );
+		$this->set_data_object_initial( $config, $form );
+		$value = $this->data_object->get_value( 'edd_licensed_downloads' );
+		$_user = $this->data_object->get_value( 'edd_licensed_downloads_user' );
 		if ( 0 < absint( $_user ) ) {
 			$user = $_user;
 		}else{
 			$user = get_current_user_id();
 		}
 
+
 		$downloads = license::get_downloads_by_licensed_user( $user );
 
-		if ( ! in_array( $value, array_keys( $downloads ) ) ) {
+		if ( ! is_array( $downloads ) || ! in_array( $value, array_keys( $downloads ) ) ) {
+			if( '' != $this->data_object->get_value( 'edd_licensed_downloads_none' ) ? $message = $this->data_object->get_value( 'edd_licensed_downloads_none' ) : $message = __( 'No license downloads found for this user.', 'cf-edd' ) );
 			return array(
 				'type'=>'error',
-				'note' => var_export( [ 'd' => $downloads, 'v' => $value ] , true )
+				'note' => $message
+
 			);
 		}
+
+		$this->setup_transata( $proccesid );
 	}
 
 

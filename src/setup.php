@@ -25,7 +25,7 @@ class setup {
 	 */
 	public static function add_hooks(){
 		add_action( 'caldera_forms_pre_load_processors', [ __CLASS__, 'add_processor' ] );
-		add_filter( 'caldera_forms_render_get_field', [ __CLASS__, 'init_license_field' ], 10, 2 );
+		add_filter( 'caldera_forms_render_get_field', [ __CLASS__, 'init_license_field' ], 99, 2 );
 	}
 
 	/**
@@ -33,7 +33,7 @@ class setup {
 	 */
 	public static function remove_hooks(){
 		remove_action( 'caldera_forms_pre_load_processors', [ __CLASS__, 'add_processor' ] );
-		remove_filter( 'caldera_forms_render_get_field', [ __CLASS__, 'init_license_field' ], 10 );
+		remove_filter( 'caldera_forms_render_get_field', [ __CLASS__, 'init_license_field' ], 99 );
 	}
 
 	/**
@@ -117,7 +117,7 @@ class setup {
 					$field[ 'config' ][ 'option' ] = array();
 					if ( ! empty( $downloads ) ) {
 						foreach( $downloads as $id => $title ) {
-							$field[ 'config' ][ 'option' ][ $id ] = array(
+							$field[ 'config' ][ 'option' ][] = array(
 								'label' => esc_html( $title ),
 								'value' => (string) $id,
 							);
@@ -128,6 +128,7 @@ class setup {
                     $field[ 'config' ]['show_values'] = 1;
 
 
+					break;
 				}
 
 			}
