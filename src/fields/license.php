@@ -12,6 +12,8 @@
 namespace calderawp\cfeddfields\fields;
 
 
+use calderawp\cfeddfields\licenses\query;
+
 class license {
 
 	/**
@@ -27,36 +29,11 @@ class license {
 			$user_id = get_current_user_id();
 		}
 
-		$licensed_downloads = false;
-		if ( 0 < absint( $user_id ) ) {
-			global $wpdb;
-			$query = $wpdb->prepare( 'SELECT `post_id` FROM `%2s` WHERE `meta_value` = %d AND `meta_key` = "_edd_sl_user_id"', $wpdb->postmeta, $user_id );
-			$licenses = $wpdb->get_results( $query, ARRAY_A );
-
-			if ( ! empty( $licenses ) ) {
-				foreach( $licenses as $license ) {
-					if ( ! $include_expired ) {
-						$status = get_post_meta( $license[ 'post_id' ], '_edd_sl_status', true );
-						if ( false ==  $status ) {
-							continue;
-						}
-
-					}
-					$id = get_post_meta( $license[ 'post_id'], '_edd_sl_download_id', true );
-					if ( $id ) {
-						$licensed_downloads[$id] = get_the_title( $id );
-					}
-
-				}
-
-			}
-
-		}
+		global  $wpdb;
+		$licensed_downloads = ( new query( $user_id, $include_expired, $wpdb ) )->get_downloads();
 
 		return $licensed_downloads;
 
 	}
-
-
 
 }
