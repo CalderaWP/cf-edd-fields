@@ -102,10 +102,11 @@ class setup {
 	 * @return array
 	 */
 	public static function init_license_field( $field, $form ){
-
+		$user_id = null;
 		if( $processors = \Caldera_Forms::get_processor_by_type( 'edd-licensed-downloads', $form ) ){
 			foreach( $processors as $processor ){
 				if( $field['ID'] === $processor['config']['edd_licensed_downloads'] ){
+
 					if ( ! empty( $config[ 'config' ][ 'edd_licensed_downloads_user' ] ) && 0 < absint( $config[ 'config' ][ 'edd_licensed_downloads_user' ] ) ) {
 						$user_id = $config[ 'config' ][ 'edd_licensed_downloads_user' ];
 					}elseif ( is_user_logged_in() ){
@@ -125,8 +126,6 @@ class setup {
 	}
 
 	public static function populate_field_by_licenses( $field, $user_id = null, $include_expired = false ){
-		$user_id = null;
-
 
 		$downloads = license::get_downloads_by_licensed_user( $user_id, $include_expired );
 		$field[ 'config' ][ 'option' ] = array();
