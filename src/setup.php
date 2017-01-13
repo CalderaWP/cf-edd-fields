@@ -106,26 +106,12 @@ class setup {
 		if( $processors = \Caldera_Forms::get_processor_by_type( 'edd-licensed-downloads', $form ) ){
 			foreach( $processors as $processor ){
 				if( $field['ID'] === $processor['config']['edd_licensed_downloads'] ){
-					$user_id = null;
 					if ( ! empty( $config[ 'config' ][ 'edd_licensed_downloads_user' ] ) && 0 < absint( $config[ 'config' ][ 'edd_licensed_downloads_user' ] ) ) {
 						$user_id = $config[ 'config' ][ 'edd_licensed_downloads_user' ];
 					}elseif ( is_user_logged_in() ){
 						$user_id = get_current_user_id();
 					}
-
-					$downloads = license::get_downloads_by_licensed_user( $user_id );
-					$field[ 'config' ][ 'option' ] = array();
-					if ( ! empty( $downloads ) ) {
-						foreach( $downloads as $id => $title ) {
-							$field[ 'config' ][ 'option' ][] = array(
-								'label' => esc_html( $title ),
-								'value' => (string) $id,
-							);
-						}
-					}
-
-					//Worksround for https://github.com/CalderaWP/Caldera-Forms/issues/1074
-                    $field[ 'config' ]['show_values'] = 1;
+					self::populate_field_by_licenses( $field, $user_id, false );
 
 
 					break;
@@ -136,6 +122,27 @@ class setup {
 		}
 		return $field;
 
+	}
+
+	public static function populate_field_by_licenses( $field, $user_id = null, $include_expired = false ){
+		$user_id = null;
+
+
+		$downloads = license::get_downloads_by_licensed_user( $user_id, $include_expired );
+		$field[ 'config' ][ 'option' ] = array();
+		if ( ! empty( $downloads ) ) {
+			foreach( $downloads as $id => $title ) {
+				$field[ 'config' ][ 'option' ][] = array(
+					'label' => esc_html( $title ),
+					'value' => (string) $id,
+				);
+			}
+		}
+
+		//Worksround for https://github.com/CalderaWP/Caldera-Forms/issues/1074
+		$field[ 'config' ]['show_values'] = 1;
+
+		return $field;
 	}
 
 }
