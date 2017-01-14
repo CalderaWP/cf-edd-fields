@@ -112,7 +112,8 @@ class setup {
 					}elseif ( is_user_logged_in() ){
 						$user_id = get_current_user_id();
 					}
-					self::populate_field_by_licenses( $field, $user_id, false );
+					
+					$field = self::populate_field_by_licenses( $field, $user_id, false );
 
 
 					break;
