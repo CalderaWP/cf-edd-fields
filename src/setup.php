@@ -127,8 +127,20 @@ class setup {
 	}
 
 	public static function populate_field_by_licenses( $field, $user_id = null, $include_expired = false ){
-
-		$downloads = license::get_downloads_by_licensed_user( $user_id, $include_expired );
+		/**
+		 * Early entry point for license field downloads query
+		 *
+		 * @param array|null $downloads Return null for default query. Return array of WP_Posts to bypass query.
+		 * @param null|int $user_id User ID to query for
+		 * @param bool $include_expired If query was to include expired or not
+		 */
+		$downloads = apply_filters( 'cf_edd_sl_pre_get_license', null, $user_id, $include_expired );
+		if( null === $downloads ){
+			$downloads = license::get_downloads_by_licensed_user( $user_id, $include_expired );
+		}
+		if( ! is_array( $downloads ) ){
+			$downloads = [];
+		}
 		$field[ 'config' ][ 'option' ] = array();
 		if ( ! empty( $downloads ) ) {
 			foreach( $downloads as $id => $title ) {
