@@ -102,18 +102,16 @@ class setup {
 	 * @return array
 	 */
 	public static function init_license_field( $field, $form ){
-		$user_id = null;
+
 		if( $processors = \Caldera_Forms::get_processor_by_type( 'edd-licensed-downloads', $form ) ){
 			foreach( $processors as $processor ){
 				if( $field['ID'] === $processor['config']['edd_licensed_downloads'] ){
-
 					if ( ! empty( $config[ 'config' ][ 'edd_licensed_downloads_user' ] ) && 0 < absint( $config[ 'config' ][ 'edd_licensed_downloads_user' ] ) ) {
 						$user_id = $config[ 'config' ][ 'edd_licensed_downloads_user' ];
 					}elseif ( is_user_logged_in() ){
 						$user_id = get_current_user_id();
 					}
-					
-					$field = self::populate_field_by_licenses( $field, $user_id, false );
+					self::populate_field_by_licenses( $field, $user_id, false );
 
 
 					break;
@@ -127,23 +125,17 @@ class setup {
 	}
 
 	public static function populate_field_by_licenses( $field, $user_id = null, $include_expired = false ){
-		/**
-		 * Early entry point for license field downloads query
-		 *
-		 * @param array|null $downloads Return null for default query. Return array of WP_Posts to bypass query.
-		 * @param null|int $user_id User ID to query for
-		 * @param bool $include_expired If query was to include expired or not
-		 */
-		$downloads = apply_filters( 'cf_edd_sl_pre_get_license', null, $user_id, $include_expired );
-		if( null === $downloads ){
-			$downloads = license::get_downloads_by_licensed_user( $user_id, $include_expired );
-		}
-		if( ! is_array( $downloads ) ){
-			$downloads = [];
-		}
+		$user_id = null;
+
+
+		$downloads = license::get_downloads_by_licensed_user( $user_id, $include_expired );
 		$field[ 'config' ][ 'option' ] = array();
 		if ( ! empty( $downloads ) ) {
 			foreach( $downloads as $id => $title ) {
+				if( edd_is_bundled_product( $id ) ){
+					continue;
+				}
+				
 				$field[ 'config' ][ 'option' ][] = array(
 					'label' => esc_html( $title ),
 					'value' => (string) $id,
