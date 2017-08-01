@@ -102,6 +102,7 @@ class setup {
 	 * @return array
 	 */
 	public static function init_license_field( $field, $form ){
+		$user_id = null;
 
 		if( $processors = \Caldera_Forms::get_processor_by_type( 'edd-licensed-downloads', $form ) ){
 			foreach( $processors as $processor ){
@@ -111,7 +112,7 @@ class setup {
 					}elseif ( is_user_logged_in() ){
 						$user_id = get_current_user_id();
 					}
-					self::populate_field_by_licenses( $field, $user_id, false );
+					$field = self::populate_field_by_licenses( $field, $user_id, false );
 
 
 					break;
