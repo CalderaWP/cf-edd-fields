@@ -133,9 +133,6 @@ class setup {
 		$field[ 'config' ][ 'option' ] = array();
 		if ( ! empty( $downloads ) ) {
 			foreach( $downloads as $id => $title ) {
-				if( edd_is_bundled_product( $id ) ){
-					continue;
-				}
 				
 				$field[ 'config' ][ 'option' ][] = array(
 					'label' => esc_html( $title ),
